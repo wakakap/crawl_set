@@ -75,7 +75,7 @@ if __name__ == '__main__':
             time.sleep(3)
             try:
                 img_dl(driver,k,save_path)
-                diary_write('话数'+str(list.index(k))+" success！",save_path)
+                diary_write('话数'+str(len(list)-list.index(k))+" success！",save_path)
             except:
                 print(k+' error')
                 diary_write('话数'+str(list.index(k))+" error！",save_path)
