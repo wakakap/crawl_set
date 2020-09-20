@@ -18,7 +18,8 @@ def img_dl(driver,url,path):#每一话的下载
     time.sleep(3)
     ims = driver.find_elements_by_class_name("aligncenter")#这个可能会变化，注意查看
     h = ims[0].get_attribute('alt')
-    os.mkdir(path+'/'+h)#创建路径
+    if not os.path.exists(path):#如果没有则创建路径
+        os.mkdir(path+'/'+h)
     for i in ims:
         imurl = str(i.get_attribute('src'))
         n = str(i.get_attribute('onload'))
@@ -28,7 +29,8 @@ def img_dl(driver,url,path):#每一话的下载
         if r.status_code == 200: #这里的代码是借鉴他人的，状态码什么意思待学习
             imgname = h+'_'+n + '.jpg'
             filepath = path+'/'+h+'/'+imgname
-            open(filepath, 'wb').write(r.content) # 将内容写入图片
+            if not os.path.exists(filepath):
+                open(filepath, 'wb').write(r.content) # 将内容写入图片
             #print(imgname+" success")
         del r
     return
@@ -71,7 +73,7 @@ if __name__ == '__main__':
             driver.get(k)
             driver.refresh()#避免有时候会卡在上个页面
             time.sleep(3)
-            try:#如果有错误比如之前爬过的话数，文件夹已经创建会报错直接跳过
+            try:
                 img_dl(driver,k,save_path)
                 diary_write('话数'+str(list.index(k))+" success！",save_path)
             except:
